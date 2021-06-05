@@ -18,8 +18,19 @@ function getData(url) {
 function newsFeed() {
   const newsFeed = getData(NEWS_ULR); // JSON 형태로 응답값을 변환
   const newsList = []; //배열을 이용하여, DOM API를 대체
+  let template = `
+    <div class="container mx-auto p-4">
+     <h1>Hacker News</h1>
+     <ul>
+        {{__news_feed__}}
+     </ul>
+     <div>
+      <a href="#/page/{{__prev_page__}}">이전 페이지</a>
+      <a href="#/page/{{__next_page__}}">다음 페이지</a>
+     </div>
+    </div>
+  `;
 
-  newsList.push("<ul>");
   // 반복문을 통한 데이터 표현
   for (let i = (store.currentPage - 1) * 10; i < store.currentPage * 10; i++) {
     newsList.push(`
@@ -29,15 +40,14 @@ function newsFeed() {
   `);
   }
 
-  newsList.push("</ul>");
-  newsList.push(`
-    <div>
-        <a href="#/page/${store.currentPage > 1 ? store.currentPage - 1 : 1}">이전 페이지</a>
-        <a href="#/page/${store.currentPage + 1}">다음 페이지</a>
-    </div>
-  `);
+  template = template.replace("{{__news_feed__}}", newsList.join(""));
+  template = template.replace(
+    "{{__prev_page__}}",
+    store.currentPage > 1 ? store.currentPage - 1 : 1
+  );
+  template = template.replace("{{__next_page__}}", store.currentPage + 1);
 
-  container.innerHTML = newsList.join("");
+  container.innerHTML = template;
 }
 
 function newsDetail() {
