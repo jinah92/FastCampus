@@ -12,36 +12,49 @@ function getData(url) {
   return JSON.parse(ajax.response);
 }
 
-const newsFeed = getData(NEWS_ULR); // JSON 형태로 응답값을 변환
+function newsFeed() {
+  const newsFeed = getData(NEWS_ULR); // JSON 형태로 응답값을 변환
+  const newsList = []; //배열을 이용하여, DOM API를 대체
 
-const ul = document.createElement("ul");
-
-// 웹 페이지에서 해시값(#) 변경될 떄 호출되는 함수
-window.addEventListener("hashchange", function () {
-  const id = this.location.hash.substr(1); // 선택한 콘텐츠의 id부분만을 추출
-
-  const newsContent = getData(CONTENT_URL.replace("@id", id)); // 해당 콘텐츠 정보 요청 & 응답받은 콘텐츠를 JAON 파싱하여 저장
-  const title = this.document.createElement("h1");
-
-  title.innerHTML = newsContent.title;
-
-  content.appendChild(title);
-  console.log(newsContent);
-});
-
-// 반복문을 통한 데이터 표현
-for (let i = 0; i < 10; i++) {
-  const div = document.createElement("div");
-
-  div.innerHTML = `
+  newsList.push("<ul>");
+  // 반복문을 통한 데이터 표현
+  for (let i = 0; i < 10; i++) {
+    newsList.push(`
     <li>
         <a href="#${newsFeed[i].id}">${newsFeed[i].title}(${newsFeed[i].comments_count})</a>
     </li>
-  `;
+  `);
+  }
 
-  ul.appendChild(div.firstElementChild); // 첫번째 자식요소
-  //   ul.appendChild(div.children[0]);
+  newsList.push("</ul>");
+
+  container.innerHTML = newsList.join("");
 }
 
-container.appendChild(ul);
-container.appendChild(content);
+function newsDetail() {
+  const id = location.hash.substr(1); // 선택한 콘텐츠의 id부분만을 추출
+
+  const newsContent = getData(CONTENT_URL.replace("@id", id)); // 해당 콘텐츠 정보 요청 & 응답받은 콘텐츠를 JAON 파싱하여 저장
+
+  container.innerHTML = `
+    <h1>${newsContent.title}</h1>
+    <div>
+    <a href="#">목록으로</a>
+    </div>
+  `;
+}
+
+function router() {
+  const routePath = location.hash;
+
+  if (routePath === "") {
+    //첫 진입
+    newsFeed();
+  } else {
+    newsDetail();
+  }
+}
+
+// 웹 페이지에서 해시값(#) 변경될 떄 호출되는 함수
+window.addEventListener("hashchange", router);
+router();
