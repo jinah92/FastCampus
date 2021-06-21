@@ -1,9 +1,25 @@
-const container = document.getElementById("root");
-const ajax = new XMLHttpRequest(); //네트워크를 통해 데이터를 가져오는 도구 (반환값을 ajax 변수에 저장)
+type Store = {
+  currentPage: number;
+  feeds: NewsFeed[];
+}
+
+type NewsFeed = {
+  id: number;
+  comments_count: number;
+  url: string;
+  user: string;
+  time_ago: string;
+  points: number;
+  title: string;
+  read?: boolean;
+}
+
+const container: HTMLElement | null = document.getElementById("root");
+const ajax: XMLHttpRequest = new XMLHttpRequest(); //네트워크를 통해 데이터를 가져오는 도구 (반환값을 ajax 변수에 저장)
 const content = document.createElement("div");
 const NEWS_ULR = "https://api.hnpwa.com/v0/news/1.json";
 const CONTENT_URL = "https://api.hnpwa.com/v0/item/@id.json";
-const store = {
+const store: Store = {
   currentPage: 1,
   feeds: [],
 };
@@ -25,8 +41,17 @@ function makeFeeds(feeds) {
   return feeds;
 }
 
+// 타입 가드 : 타입이 null이 올 수 있는 경우를, 분기하여 처리
+function updateView(html){
+  if (container){
+    container.innerHTML = html;
+  } else {
+    console.error('최상위 컨테이너가 없어 UI를 진행하지 못합니다.')
+  }
+}
+
 function newsFeed() {
-  let newsFeed = store.feeds; // JSON 형태로 응답값을 변환
+  let newsFeed: NewsFeed[] = store.feeds; // JSON 형태로 응답값을 변환
   const newsList = []; //배열을 이용하여, DOM API를 대체
   let template = `
     <div class="bg-gray-600 min-h-screen">
@@ -88,7 +113,7 @@ function newsFeed() {
   );
   template = template.replace("{{__next_page__}}", store.currentPage + 1);
 
-  container.innerHTML = template;
+  updateView(template)
 }
 
 function newsDetail() {
@@ -152,7 +177,7 @@ function newsDetail() {
     return commentString.join("");
   }
 
-  container.innerHTML = template.replace("{{__comments__}}", makeComment(newsContent.comments));
+  updateView(template.replace("{{__comments__}}", makeComment(newsContent.comments)))
 }
 
 function router() {
