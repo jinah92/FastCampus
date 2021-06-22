@@ -31,20 +31,42 @@ interface NewsComment extends News {
 const container: HTMLElement | null = document.getElementById("root");
 const ajax: XMLHttpRequest = new XMLHttpRequest(); //네트워크를 통해 데이터를 가져오는 도구 (반환값을 ajax 변수에 저장)
 const content = document.createElement("div");
-const NEWS_ULR = "https://api.hnpwa.com/v0/news/1.json";
+const NEWS_URL = "https://api.hnpwa.com/v0/news/1.json";
 const CONTENT_URL = "https://api.hnpwa.com/v0/item/@id.json";
 const store: Store = {
   currentPage: 1,
   feeds: [],
 };
 
-// API 요청 함수
-// 제네릭
-function getData<AjaxResponse>(url: string): AjaxResponse {
-  ajax.open("GET", url, false);
-  ajax.send();
+// getData 클래스 변환
+class Api {
+  url: string;
+  ajax: XMLHttpRequest;
 
-  return JSON.parse(ajax.response);
+  constructor(url: string) {
+    this.url = url;
+    this.ajax = new XMLHttpRequest();
+  }
+
+  protected getRequest<AjaxResponse>(): AjaxResponse {
+    this.ajax.open("GET", this.url, false);
+    this.ajax.send();
+
+    return JSON.parse(this.ajax.response);
+  }
+}
+
+class NewsFeedApi extends Api {
+  getData(): NewsFeed[] {
+    return this.getRequest<NewsFeed[]>();
+  }
+}
+
+class NewsDetailApi extends Api {
+  getData(): NewsDatil {
+    return this.getRequest<NewsDatil>();
+    
+  }
 }
 
 function makeFeeds(feeds: NewsFeed[]): NewsFeed[] {
@@ -66,6 +88,7 @@ function updateView(html: string): void{
 }
 
 function newsFeed(): void {
+  const api = new NewsFeedApi(NEWS_URL);
   let newsFeed: NewsFeed[] = store.feeds; // JSON 형태로 응답값을 변환
   const newsList = []; //배열을 이용하여, DOM API를 대체
   let template = `
@@ -91,7 +114,7 @@ function newsFeed(): void {
 
   if (newsFeed.length === 0) {
     // 최초 진입 시 api를 통해 가져오기
-    newsFeed = store.feeds = makeFeeds(getData<NewsFeed[]>(NEWS_ULR));
+    newsFeed = store.feeds = makeFeeds(api.getData());
   }
 
   // 반복문을 통한 데이터 표현
@@ -133,7 +156,8 @@ function newsFeed(): void {
 
 function newsDetail(): void {
   const id = location.hash.substr(7); // 선택한 콘텐츠의 id부분만을 추출
-  const newsContent = getData<NewsDatil>(CONTENT_URL.replace("@id", id)); // 해당 콘텐츠 정보 요청 & 응답받은 콘텐츠를 JAON 파싱하여 저장
+  const api = new NewsDetailApi(CONTENT_URL.replace("@id", id));
+  const newsContent = api.getData(); // 해당 콘텐츠 정보 요청 & 응답받은 콘텐츠를 JAON 파싱하여 저장
 
   let template = `
     <div class="bg-gray-600 min-h-screen pb-8">
