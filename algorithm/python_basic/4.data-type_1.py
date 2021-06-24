@@ -64,3 +64,23 @@ import math
 
 print(math.ceil(5.1))   # 인자보다 큰 정수 중 가장 작은 정수
 print(math.floor(3.874))    # 인자 이하의 수 중 가장 작은 정수
+
+# 문자열 형 변환
+print(str(77) + 'a')
+print(str(10.4))
+
+a = 'niceman'
+b = 'orange'
+
+print(a.islower())  # 문자열이 모두 소문자인 경우 True, 아니면 False
+print(b.endswith('e'))  # 문자열의 끝이 e인 경우 True, 아니면 False
+print(a.capitalize())   # 첫문자는 대문자, 나머지는 소문자로 변경
+print(a.replace('nice', 'good'))    # 특정 문자열로 대체
+print(list(reversed(b)))    # 문자열 역순대로 리스트를 반환
+
+print(a[0:3])
+print(a[0:len(a)])
+print(a[:]) # 처음부터 끝까지
+print(b[0:4:2]) # 2씩 step
+print(b[1:-2])
+print(b[::-1])  # 역순
