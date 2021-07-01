@@ -27,9 +27,9 @@ c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username tex
     phone text, website text, regdate text)")
 
 # 데이터 삽입
-# c.execute("INSERT INTO users VALUES(1, 'kim', 'kim@naver.com', '010-0000-0000', 'kim.com', ?)", (nowDatetime,))
-# c.execute("INSERT INTO users(id, username, email, phone, website, regdate) VALUES (?,?,?,?,?,?)",\
-#     (2, 'PARK', 'Park@daum.net', '010-1111-1111', 'Park.com', nowDatetime))
+c.execute("INSERT INTO users VALUES(1, 'kim', 'kim@naver.com', '010-0000-0000', 'kim.com', ?)", (nowDatetime,))
+c.execute("INSERT INTO users(id, username, email, phone, website, regdate) VALUES (?,?,?,?,?,?)",\
+    (2, 'PARK', 'Park@daum.net', '010-1111-1111', 'Park.com', nowDatetime))
 
 # Many 삽입(투플, 리스트)
 userList = (
@@ -38,12 +38,12 @@ userList = (
     (5, 'Yoo', 'Yoo@google.com', '010-4444-4444', 'Yoo.net', nowDatetime),
 )
 
-# c.executemany("INSERT INTO users(id, username, email, phone, website, regdate) \
-#     VALUES (?,?,?,?,?,?)", userList)
+c.executemany("INSERT INTO users(id, username, email, phone, website, regdate) \
+    VALUES (?,?,?,?,?,?)", userList)
 
 # 테이블 데이터 삭제
 # conn.execute("DELETE FROM users")
-print("users db deleted : ", conn.execute("DELETE FROM users").rowcount)
+# print("users db deleted : ", conn.execute("DELETE FROM users").rowcount)
 
 # 커밋 : isolation_level = None 일 경우 자동 반영(오토 커밋)
 # conn.commit() - 명시적 커밋 
