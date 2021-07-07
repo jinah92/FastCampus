@@ -1,0 +1,68 @@
+# 시퀀스형
+# 컨테이너(container) : 서로 다른 자료형(list, tuple, collections.deque)을 저장
+# Flat : 한 개의 자료형(str, bytes, bytearray, array.array, memoryview)만 저장
+# 가변 : list, bytearray, array.array, memoryview, deque
+# 불변 : tuple, str, bytes
+
+# 지능형 리스트 (Comprehending List)
+
+# Non-Comprehending List
+chars = '!@#$%^&*()_+'
+code1 = []
+
+for s in chars:
+    code1.append(ord(s))
+
+# Comprehending list (상대적으로 빠른 속도)
+code2 = [ord(s) for s in chars]
+
+# Comprehending list (더 빠른 속도)
+code3 = [ord(s) for s in chars if ord(s) > 40]
+code4 = list(filter(lambda x : x > 40, map(ord, chars)))    # map, filter 결합
+
+print('EX1-1 -', code1)
+print('EX1-2 -', code2)
+print('EX1-3 -', code3)
+print('EX1-4 -', code4)
+print('EX1-5 -', [chr(s) for s in code4])
+
+print()
+
+# Generator
+import array
+
+# Generator : 한 번에 한 개의 항목을 생성 (메모리 유지 x)
+tuple_g = (ord(s) for s in chars)
+# Array
+array_g = array.array('I', (ord(s) for s in chars))
+
+print('EX2-1 -', tuple_g)
+print('EX2-2 -', next(tuple_g))
+print('EX2-3 -', next(tuple_g))
+print('EX2-4 -', array_g)
+print('EX2-4 -', array_g.tolist())
+
+print()
+
+# 제너레이터 예제
+print('EX3-1 -', ('%s' % c + str(n) for c in ['A', 'B', 'C', 'D'] for n in range(1, 11)))
+
+for s in ('%s' % c + str(n) for c in ['A', 'B', 'C', 'D'] for n in range(1, 11)):
+    print('EX3-2 -', s)
+
+# 리스트 주의할 점
+marks_1 = [['~'] * 3 for n in range(3)]
+marks_2 = [['~'] * 3] * 3
+
+print('EX4-1 -', marks_1)
+print('EX4-2 -', marks_2)
+
+marks_1[0][1] = 'X'
+marks_2[0][1] = 'X'
+
+print('EX4-3 -', marks_1)
+print('EX4-4 -', marks_2) # ERROR
+
+# 증명
+print('EX4-5 -', [id(i) for i in marks_1])
+print('EX4-6 -', [id(i) for i in marks_2]) # 모두 동일한 주소값을 바라봄
