@@ -66,3 +66,71 @@ print('EX4-4 -', marks_2) # ERROR
 # 증명
 print('EX4-5 -', [id(i) for i in marks_1])
 print('EX4-6 -', [id(i) for i in marks_2]) # 모두 동일한 주소값을 바라봄
+
+# Tuple Advanced
+# Pcking & Unpacking
+
+a, b = divmod(100, 9)   # 변수 할당 시, Unpacking
+print(a, b)
+
+print('EX5-1 -', divmod(100, 9))
+print('EX5-2 -', divmod(*(100, 9)))
+print('EX5-3 -', *(divmod(100,9)))
+
+print()
+
+x, y, *rest = range(10)
+print('EX5-4 -', x, y, rest)
+x, y, *rest = range(2)
+print('EX5-5 -', x, y, rest)
+x, y, *rest = 1,2,3,4,5
+print('EX5-6 -', x, y, rest)
+
+print()
+
+# Mutable(가변) vs Immutable(불변)
+
+l = (10, 15, 20)
+m = [10, 15, 20]
+
+print('EX6-1 -', l, m)
+print('EX6-2 -', l, m, id(l), id(m))
+
+# 재할당
+l = l * 2
+m = m * 2
+
+print('EX6-2 -', l, m, id(l), id(m))
+# l[0] = 3 # error (수정 불가)
+
+# 내부 수정
+l *= 2
+m *= 2
+
+print('EX6-2 -', l, m, id(l), id(m))
+print()
+
+# sort vs sorted
+# reverse, key=len, key=str.lower, key=func
+
+f_list = ['orange', 'apple', 'mango', 'papaya', 'lemon', 'strawberry', 'coconut']
+
+# sorted : 정렬 후 '새로운' 객체를 반환
+
+print('EX7-1 -', sorted(f_list))
+print('EX7-2 -', sorted(f_list, reverse=True))  # 내림차순
+print('EX7-3 -', sorted(f_list, key=len))  # 글자 길이순서대로 정렬
+print('EX7-4 -', sorted(f_list, key=lambda x:x[-1]))  # 마지막 글자 순으로 정렬
+
+print('EX7-5 -', f_list)    # 원본은 유지
+print()
+
+# sort : 정렬 후 객체 직접 변경
+# 반환 괎 확인 : None
+
+a = f_list.sort()
+print('EX7-6 -', f_list.sort(), f_list)
+print('EX7-7 -', f_list.sort(reverse=True), f_list)
+print('EX7-8 -', f_list.sort(key=len), f_list)
+print('EX7-9 -', f_list.sort(key=lambda x:x[-1]), f_list)
+print('EX7-10 -', f_list.sort(key=lambda x:x[-1], reverse=True), f_list)
